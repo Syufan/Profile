@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      - id: checkstyle
+        name: Checkstyle
+        entry: bash -c 'cd backend && ./mvnw checkstyle:check -Dcheckstyle.config.location=checkstyle.xml'
+        language: system
+        types: [java]
+
+  - repo: local
+    hooks:
+      - id: prettier
+        name: Prettier
+        entry: bash -c 'cd frontend && npx prettier --write'
+        language: system
+        types: [javascript, jsx, ts, tsx, css]
