@@ -11,4 +11,18 @@ A personal portfolio website to showcase my projects and technical skills.
 - `backend/` — Spring Boot application
 
 ## Getting Started
-coming soon
+
+### Backend
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+API runs on `http://localhost:8080`
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm start
+```
+App runs on `http://localhost:3000`
