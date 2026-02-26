@@ -51,4 +51,9 @@ public class ProfileService {
         return result;
     }
 
+    public List<Project> getProjects() throws Exception {
+        Map<String, Object> raw = loadData();
+        return getProjects(raw);
+    }
+
 }
