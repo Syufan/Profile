@@ -3,6 +3,7 @@ import { getProfile } from "@/services/api";
 import { Experience } from "@/types";
 import Link from "next/link";
 import ResumeButton from "@/components/ResumeButton";
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const data = await getProfile();
