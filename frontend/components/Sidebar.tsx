@@ -1,7 +1,7 @@
 import NavLinks from "./NavLinks";
 import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
-import { FiDownload } from "react-icons/fi";
 import { SidebarProps } from "@/types";
+import ResumeButton from "@/components/ResumeButton";
 
 export default async function Sidebar({ data }: SidebarProps) {
     return (
@@ -12,13 +12,7 @@ export default async function Sidebar({ data }: SidebarProps) {
           <p className="text-slate-400 mt-2">{data.about.tagline}</p>
           <div className="hidden lg:block">
             <NavLinks />
-            <a
-              href="/Jeff-zhang-resume.pdf"
-              download
-              className="text-slate-400 hover:text-white transition-colors duration-150 flex items-center gap-1 text-sm mt-8 group"
-            >
-              Resume <FiDownload size={14} className="transition-transform duration-150 group-hover:scale-135" />
-            </a>
+            <ResumeButton />
           </div>
         </div>
 

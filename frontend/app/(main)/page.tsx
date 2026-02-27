@@ -2,7 +2,7 @@ import TechBadge from "@/components/TechBadge";
 import { getProfile } from "@/services/api";
 import { Experience } from "@/types";
 import Link from "next/link";
-import { FiDownload } from "react-icons/fi";
+import ResumeButton from "@/components/ResumeButton";
 
 export default async function Home() {
   const data = await getProfile();
@@ -58,13 +58,7 @@ export default async function Home() {
         </div>
       </section>
       <section id="resume" className="lg:hidden -mt-13">
-        <a
-          href="/Jeff-zhang-resume.pdf"
-          download
-          className="text-slate-400 flex items-center gap-1 text-base group"
-        >
-          Resume <FiDownload size={14} />
-        </a>
+        <ResumeButton />
       </section>
     </div>
   );
