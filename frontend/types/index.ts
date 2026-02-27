@@ -1,4 +1,4 @@
-export interface Job {
+export interface Experience {
     period: string;
     company: string;
     role: string;
@@ -16,4 +16,14 @@ export interface Project {
       github: string | null;
       live: string | null;
     };
+}
+
+export interface SidebarProps {
+  data: {
+    about: {
+      name: string;
+      title: string;
+      tagline: string;
+    };
+  };
 }

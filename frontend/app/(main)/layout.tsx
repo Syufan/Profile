@@ -7,20 +7,25 @@ export async function generateMetadata(): Promise<Metadata> {
   try{
     const data = await getProfile();
     return{
-      title: data.name,
-      description: data.title,
+      title: data.about.name,
+      description: data.about.title,
+      openGraph: {
+        title: data.about.name,
+        description: data.about.title,
+      },
     }
-  }catch{
-    console.error("Failed to fetch profile metadata:", Error);
-    throw Error;
+  }catch(error) {
+    console.error("Failed to fetch profile metadata:", error);
+    throw error;
   }
 }
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default async function MainLayout({ children }: { children: React.ReactNode }) {
+  const data = await getProfile();
   return (
-    <div className="max-w-6xl mx-auto flex">
-      <Sidebar />
-      <main className="flex-1 px-20 pr-5 py-16">
+    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row">
+      <Sidebar data={data}/>
+      <main className="flex-1 px-6 py-8 lg:px-20 lg:pr-5 lg:py-16">
         {children}
       </main>
     </div>
