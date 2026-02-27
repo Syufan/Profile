@@ -5,6 +5,7 @@ import { FaGithub } from "react-icons/fa";
 import { FiGlobe } from "react-icons/fi";
 import TechBadge from "@/components/TechBadge";
 import Link from "next/link";
+export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage() {
     const [projects, data] = await Promise.all([getProjects(), getProfile()]);

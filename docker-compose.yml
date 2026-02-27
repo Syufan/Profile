@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - /home/ubuntu/data/data.json:/etc/profile/data.json
+    environment:
+      # - SPRING_PROFILES_ACTIVE=prod
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://backend:8080
+    volumes:
+      - /home/ubuntu/resume/jeff-zhang-resume.pdf:/app/public/jeff-zhang-resume.pdf
+    depends_on:
+      - backend
