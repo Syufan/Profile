@@ -1,32 +1,20 @@
-import type { Metadata } from "next";
-import Sidebar from "@/components/Sidebar";
-import { getProfile } from "@/services/api";
-import "./globals.css";
+import type { Metadata } from 'next';
 
-export async function generateMetadata(): Promise<Metadata> {
-  try{
-    const data = await getProfile();
-    return{
-      title: data.name,
-      description: data.title,
-    }
-  }catch{
-    console.error("Failed to fetch profile metadata:", Error);
-    throw Error;
+export const metadata: Metadata = {
+  title: 'Jeff Zhang - Full Stack AI Engineer',
+  description: 'Full stack engineer focused on backend systems and AI-driven automation.',
+  openGraph: {
+    title: 'Jeff Zhang - Full Stack AI Engineer',
+    description: 'Full stack engineer focused on backend systems and AI-driven automation.',
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+      <html lang="en">
+        <body className="bg-slate-900">
+          {children}
+        </body>
+      </html>
+    );
   }
-}
-
-export default function RootLayout({ children }:{children: React.ReactNode;}){
-  return(
-    <html lang="en">
-      <body className = "bg-slate-900">
-        <div className="max-w-6xl mx-auto flex">
-          <Sidebar />
-          <main className = "flex-1 px-20 pr-5 py-16">
-            {children}
-          </main>
-        </div>
-      </body>
-    </html>
-  )
-}

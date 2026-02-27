@@ -1,5 +1,6 @@
 package com.syufan.profile.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syufan.profile.domain.service.ProfileService;
+import com.syufan.profile.domain.model.Project;
 
 @RestController
 @RequestMapping("/api")
@@ -19,7 +21,12 @@ public class ProfileController {
     }
 
     @GetMapping("/")
-    public Map<String, Object> getProfile() throws Exception {
+    public Map<String, Object> getProfile() {
         return profileService.getProfile();
+    }
+
+    @GetMapping("/projects")
+    public List<Project> getProjects() {
+        return profileService.getProjects();
     }
 }
