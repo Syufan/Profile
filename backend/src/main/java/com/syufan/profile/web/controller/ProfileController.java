@@ -21,12 +21,12 @@ public class ProfileController {
     }
 
     @GetMapping("/")
-    public Map<String, Object> getProfile() throws Exception {
+    public Map<String, Object> getProfile() {
         return profileService.getProfile();
     }
 
     @GetMapping("/projects")
-    public List<Project> getProjects() throws Exception {
+    public List<Project> getProjects() {
         return profileService.getProjects();
     }
 }
