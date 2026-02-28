@@ -4,7 +4,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /home/ubuntu/data/data.json:/etc/profile/data.json
+      - /home/ubuntu/data/data.json:/app/data/data.json
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
