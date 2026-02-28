@@ -6,6 +6,7 @@ export default function ResumeButton() {
   return (
     <a
       href={RESUME_URL}
+      target="_blank"
       download
       className="text-slate-400 hover:text-white transition-colors duration-150 flex items-center gap-1 text-sm mt-8 group"
     >
