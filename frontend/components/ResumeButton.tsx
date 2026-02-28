@@ -1,6 +1,6 @@
 import { FiDownload } from "react-icons/fi";
 
-const RESUME_URL = "https://assets.jeffzhang.dev/jeff-zhang-resume.pdf";
+const RESUME_URL = "https://jeff-zhang-assets.s3.ap-southeast-1.amazonaws.com/jeff-zhang-resume.pdf";
 
 export default function ResumeButton() {
   return (
