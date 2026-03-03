@@ -1,27 +1,77 @@
-name: Deploy
+name: CI/CD
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Set up JDK
+          uses: actions/setup-java@v3
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '18'
+
+        - name: Checkstyle
+          working-directory: ./backend
+          run: ./mvnw checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
+
+        - name: Prettier
+          working-directory: ./frontend
+          run: |
+            npm ci
+            npx prettier --check .
+
+        - name: Run backend tests
+          working-directory: ./backend
+          run: ./mvnw test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy files to EC2
-        uses: appleboy/scp-action@v0.1.7
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "."
-          target: "/home/ubuntu/app"
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/syufan/portfolio-backend:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+
+    steps:
       - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -29,7 +79,21 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            mkdir -p /home/ubuntu/app
+            cat > /home/ubuntu/app/docker-compose.yml << 'EOF'
+            services:
+              backend:
+                image: ghcr.io/syufan/portfolio-backend:latest
+                ports:
+                  - "80:8080"
+                volumes:
+                  - /home/ubuntu/data/data.json:/app/data/data.json
+                environment:
+                  - SPRING_PROFILES_ACTIVE=prod
+                  - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+            EOF
+            echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" > /home/ubuntu/app/.env
+            docker pull ghcr.io/syufan/portfolio-backend:latest
             cd /home/ubuntu/app
-            echo "CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}" > .env
             docker-compose down
-            docker-compose up -d --build
+            docker-compose up -d
