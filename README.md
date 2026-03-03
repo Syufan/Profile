@@ -1,22 +1,19 @@
 # Portfolio
-A personal portfolio website to showcase my projects and technical skills.
+A full-stack portfolio site built with Next.js and Spring Boot, deployed to AWS EC2 with a complete CI/CD pipeline.
 
 ## Tech Stack
 - Frontend: Next.js + TypeScript + Tailwind CSS + DaisyUI
 - Backend: Spring Boot
+- Test: JUnit 5, Mockito, React Testing Library, Jest
 - Deployment: AWS EC2 + Docker + GitHub Actions CI/CD
 - CDN & Security: Cloudflare
 - Frontend Hosting: Vercel
 - File Storage: AWS S3
 
-## Project Structure
-- `frontend/` — Next.js application
-- `backend/` — Spring Boot application
-
 ## Architecture
 ```
-User → Cloudflare → api.jeffzhang.dev → EC2 (Spring Boot)
-User → jeffzhang.dev → Vercel (Next.js)
+Browser → Cloudflare → jeffzhang.dev → Vercel (Next.js)
+Browser → Cloudflare → api.jeffzhang.dev → EC2 (Spring Boot)
 Resume PDF → AWS S3
 ```
 
