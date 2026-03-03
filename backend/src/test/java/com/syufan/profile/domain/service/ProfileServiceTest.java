@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ProfileServiceTest {
+class ProfileServiceTest {
     private ObjectMapper objectMapper;
     private ProfileService service;
 
