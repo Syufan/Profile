@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 /public/*.pdf
+node_modules/*
+node_modules/.bin
