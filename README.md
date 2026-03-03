@@ -37,3 +37,9 @@ App runs on `http://localhost:3000`
 - Frontend: https://jeffzhang.dev
 - Backend API: https://api.jeffzhang.dev
 
+## Preview
+<img width="1361" height="783" alt="image" src="https://github.com/user-attachments/assets/787c6f35-c4b0-4b89-bbe2-50f5e26755ab" />
+<img width="1361" height="783" alt="image" src="https://github.com/user-attachments/assets/a96aefa6-aa47-4fef-b70a-35631ea8112d" />
+
+
+
