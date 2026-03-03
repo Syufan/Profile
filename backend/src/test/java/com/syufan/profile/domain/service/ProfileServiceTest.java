@@ -23,13 +23,13 @@ class ProfileServiceTest {
     @BeforeEach
     void setUp() throws IOException {
         objectMapper = new ObjectMapper();
-        service = new ProfileService(objectMapper, new ClassPathResource("data.json"));
+        service = new ProfileService(objectMapper, new ClassPathResource("test-data.json"));
     }
 
     @Test
     @DisplayName("Should load data successfully when file exists")
     void shouldLoadDataSuccessfully() {
-        Resource validFile = new ClassPathResource("data.json");
+        Resource validFile = new ClassPathResource("test-data.json");
 
         assertThatCode(() -> new ProfileService(objectMapper, validFile))
             .doesNotThrowAnyException();

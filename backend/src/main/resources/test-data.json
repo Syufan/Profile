@@ -1,0 +1,21 @@
+{
+    "about": {
+      "name": "Test User",
+      "title": "Software Engineer",
+      "summary": "Test summary"
+    },
+    "experience": [
+      {
+        "company": "Test Corp",
+        "role": "Engineer",
+        "duration": "2022-2024"
+      }
+    ],
+    "projects": [
+      {
+        "name": "Test Project",
+        "description": "A test project",
+        "tech": ["Java", "Spring"]
+      }
+    ]
+  }
