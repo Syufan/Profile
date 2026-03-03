@@ -30,7 +30,7 @@ export default async function ProjectsPage() {
         <thead>
           <tr className="text-slate-200 text-sm border-b border-slate-700 font-normal">
             <th className="text-left py-4 w-16">Year</th>
-            <th className="text-left py-4 w-135">Project</th>
+            <th className="text-left py-4 w-160">Project</th>
             <th className="text-left py-4 max-w-xs">Built with</th>
             <th className="text-left py-4 w-20">Link</th>
           </tr>

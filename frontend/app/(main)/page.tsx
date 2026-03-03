@@ -14,7 +14,7 @@ export default async function Home() {
           About
         </h2>
         {data.about.paragraphs.map((p: string, i: number) => (
-          <p key={i} className="text-slate-400 mt-4">
+          <p key={i} className="text-slate-400 text-base leading-relaxed mt-4 lg:mt-6">
             {p}
           </p>
         ))}
