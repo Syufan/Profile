@@ -1,4 +1,5 @@
 import yaml
+import random
 
 SUGGESTIONS_LIMIT = 3
 
@@ -13,3 +14,7 @@ class Application:
         if len(data["suggestions"])<3:
             raise ValueError("Not enough suggestions")
         return data["suggestions"]
+
+
+    def pick_random_suggestion(self) -> list[str]:
+        return random.sample(self._suggestions, SUGGESTIONS_LIMIT)
