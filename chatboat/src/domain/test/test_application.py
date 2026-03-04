@@ -4,9 +4,9 @@ from src.domain.application import Application
 
 def test_successfully_open_suggestions_file(tmp_path):
     fake_path = tmp_path / "suggestions.yaml"
-    fake_path.write_text("suggestions:\n  - 'hello'")
+    fake_path.write_text("suggestions:\n  - 'hello'\n  -  'hey'\n  - 'okay'")
 
-    assert Application(fake_path)._load_suggestions(fake_path)==["hello"]
+    assert Application(fake_path)._load_suggestions(fake_path)==['hello','hey','okay']
 
 def test_fail_open_suggestions_file(tmp_path):
     fake_path = tmp_path / "suggestions.yaml"
