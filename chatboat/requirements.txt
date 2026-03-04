@@ -1,0 +1,6 @@
+ruff
+fastapi
+uvicorn
+python-dotenv
+openai
+uvicorn
