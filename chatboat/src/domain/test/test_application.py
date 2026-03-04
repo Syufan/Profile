@@ -4,7 +4,7 @@ from src.domain.application import Application
 
 def test_successfully_open_suggestions_file(tmp_path):
     fake_path = tmp_path / "suggestions.yaml"
-    fake_path.write_text("suggestions:\n  - 'hello'\n  -  'hey'\n  - 'okay'")
+    fake_path.write_text("suggestions:\n  - 'hello'\n  - 'hey'\n  - 'okay'")
 
     assert Application(fake_path)._load_suggestions(fake_path)==['hello','hey','okay']
 
@@ -20,3 +20,9 @@ def test_less_than_3_suggestions(tmp_path):
 
     with pytest.raises(ValueError):
         Application(fake_path)
+
+def test_pick_3_suggestions(tmp_path):
+    fake_path = tmp_path / "suggestions.yaml"
+    fake_path.write_text("suggestions:\n  - 'hello'\n  - 'hey'\n  - 'okay'")
+
+    assert len(Application(fake_path).pick_random_suggestion())==3
