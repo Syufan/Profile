@@ -1,3 +1,7 @@
 .DS_Store
 .env
 .vscode/
+chatboat/__pycache__/conftest.cpython-311-pytest-9.0.2.pyc
+chatboat/src/domain/__pycache__/__init__.cpython-311.pyc
+chatboat/src/domain/__pycache__/application.cpython-311.pyc
+chatboat/src/domain/test/__pycache__/test_application.cpython-311-pytest-9.0.2.pyc
