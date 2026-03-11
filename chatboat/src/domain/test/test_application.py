@@ -55,9 +55,9 @@ def test_send_message(tmp_path):
     mock_agent.send_message.return_value = "Hello"
 
     app = Application(tmp_path, agent=mock_agent)
-    result = app.send_message("hello")
+    result = app.send_message("hello", [])
 
-    mock_agent.send_message.assert_called_once()
+    mock_agent.send_message.assert_called_once_with("hello", "some data", [])
     assert result == "Hello"
 
 def test_empty_message(tmp_path):
@@ -66,4 +66,4 @@ def test_empty_message(tmp_path):
 
     with pytest.raises(ValueError):
         app = Application(tmp_path, agent=MagicMock())
-        app.send_message("")
+        app.send_message("", [])

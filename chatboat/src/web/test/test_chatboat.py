@@ -14,8 +14,8 @@ def test_send_message():
     mock_app.send_message.return_value = "Hello"
     routes = ChatBoatRoutes(mock_app)
 
-    request = ChatRequest(message="hello")
+    request = ChatRequest(message="hello", history=[])
     result = routes.send_message(request)
 
-    mock_app.send_message.assert_called_once()
+    mock_app.send_message.assert_called_once_with("hello", [])
     assert result.body != b""
