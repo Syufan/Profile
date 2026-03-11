@@ -28,9 +28,16 @@ export default function Chatbot() {
         setInput("");
         setIsLoading(true);
 
-        const data = await sendMessage(message);
+        setHistory(prev => [...prev, { role: "assistant", content: "" }]);
+
+        await sendMessage(message, history, (chunk) => {
+            setHistory(prev => {
+                const updated = [...prev];
+                updated[updated.length - 1] = { role: "assistant", content: chunk };
+                return updated;
+            });
+        });
         setIsLoading(false);
-        setHistory(prev => [...prev, { role: "assistant", content: data.message }]);
     };
 
     // 4. return UI

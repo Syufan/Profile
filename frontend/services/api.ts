@@ -41,12 +41,28 @@ export async function getSuggestions() {
   }
 }
 
-export async function sendMessage(message: string) {
-  try {
-    const response = await chatbotApi.post("/chat", { message });
-    return response.data;
-  } catch (error) {
-    console.error("Failed to send message:", error);
-    throw new Error("Failed to send message");
+export async function sendMessage(
+  message: string,
+  history: { role: string; content: string }[],
+  onChunk: (chunk: string) => void
+) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_CHATBOT_API_URL}/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, history })
+  });
+
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
+  let result = "";
+
+  while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      result += chunk;
+      onChunk(result);
   }
+
+  return result;
 }
