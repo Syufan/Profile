@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSuggestions } from "@/services/api";
+import { getSuggestions, sendMessage } from "@/services/api";
 import { FaCommentDots } from "react-icons/fa";
 
 export default function Chatbot() {
+    // 1. useState
     const [isOpen, setIsOpen] = useState(false);
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [history, setHistory] = useState<{ role: string; content: string }[]>([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+    // 2. useEffect
     useEffect(() => {
         if(isOpen) {
             getSuggestions().then(data => {
@@ -19,6 +21,19 @@ export default function Chatbot() {
         }
     }, [isOpen]);
 
+    // 3. function
+    const handleSend = async (message: string) => {
+        if (!message) return;
+        setHistory(prev => [...prev, { role: "user", content: message }]);
+        setInput("");
+        setIsLoading(true);
+
+        const data = await sendMessage(message);
+        setIsLoading(false);
+        setHistory(prev => [...prev, { role: "assistant", content: data.message }]);
+    };
+
+    // 4. return UI
     return(
         <div className="fixed bottom-6 right-6 z-50">
             {isOpen && (
@@ -37,7 +52,7 @@ export default function Chatbot() {
                                     <button
                                         key={i}
                                         className="text-left text-sm bg-slate-100 hover:bg-slate-200 rounded-lg px-3 py-2"
-                                        onClick={() => {/* 发送消息 */}}
+                                        onClick={() => handleSend(s)}
                                     >
                                         {s}
                                     </button>
@@ -56,10 +71,18 @@ export default function Chatbot() {
                     {/* Input */}
                     <div className="p-4 border-t flex gap-2">
                         <input
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
                             className="flex-1 text-sm border rounded-lg px-3 py-2"
                             placeholder="Type a message..."
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSend(input);
+                            }}
                         />
-                        <button className="text-sm bg-black text-white px-3 py-2 rounded-lg">
+                        <button
+                            className="text-sm bg-black text-white px-3 py-2 rounded-lg"
+                            onClick={() => handleSend(input)}
+                        >
                             Send
                         </button>
                     </div>
