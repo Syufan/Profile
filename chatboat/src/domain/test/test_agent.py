@@ -8,7 +8,7 @@ def test_agent_send_message(tmp_path):
         mock_response.choices[0].message.content = "Hello"
         mock_openai.return_value.chat.completions.create.return_value = mock_response
 
-        agent = Agent("some data")
-        result = agent.send_message("What are your skills?")
+        agent = Agent()
+        result = agent.send_message("What are your skills?", "some fake data")
 
         assert result == "Hello"
