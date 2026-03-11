@@ -32,11 +32,21 @@ export async function getProjects() {
 }
 
 export async function getSuggestions() {
-  const response = await chatbotApi.get("/chat");
-  return response.data;
+  try {
+    const response = await chatbotApi.get("/chat");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch suggestions:", error);
+    throw new Error("Failed to fetch suggestions");
+  }
 }
 
 export async function sendMessage(message: string) {
-  const response = await chatbotApi.post("/chat", { message });
-  return response.data;
+  try {
+    const response = await chatbotApi.post("/chat", { message });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to send message:", error);
+    throw new Error("Failed to send message");
+  }
 }
