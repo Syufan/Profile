@@ -6,7 +6,8 @@ class Agent:
 
     def send_message(self, message:str, data:str) -> str:
         response = self._client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini-2024-07-18",
+            max_tokens=500,
             messages=[
                 {"role":"system","content":f"""You are a portfolio assistant for a software engineer named Yu Fan.
                 Answer questions about Yu Fan based ONLY on the following data.
