@@ -20,3 +20,11 @@ def test_send_message():
     mock_app.send_message.assert_called_once_with("hello", [])
     assert result.status_code == 200
     assert result.media_type == "text/plain"
+
+def test_health_returns_ok():
+    mock_app = MagicMock()
+    routes = ChatBoatRoutes(mock_app)
+
+    result = routes.check_health()
+
+    assert result == {"ok": True}
