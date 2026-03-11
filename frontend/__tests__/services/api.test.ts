@@ -2,6 +2,7 @@ import {
   getProfile,
   getProjects,
   getSuggestions,
+  getHealth,
   sendMessage,
 } from "@/services/api";
 
@@ -98,5 +99,21 @@ describe("api", () => {
     global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
 
     await expect(sendMessage("hello", [], () => {})).rejects.toThrow();
+  });
+
+  it("getHealth should return health status", async () => {
+    getMockGet().mockResolvedValue({
+      data: { ok: true },
+    });
+
+    const result = await getHealth();
+
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("getHealth should throw when request fails", async () => {
+    getMockGet().mockRejectedValue(new Error("Network error"));
+
+    await expect(getHealth()).rejects.toThrow("Failed to fetch health status");
   });
 });
