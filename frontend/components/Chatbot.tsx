@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getSuggestions, sendMessage } from "@/services/api";
 import { FaCommentDots } from "react-icons/fa";
+import { RiRobot2Line } from "react-icons/ri";
 
 type Message = { role: string; content: string };
 
@@ -182,10 +183,8 @@ export default function Chatbot() {
                     font-size: 10px;
                     font-weight: 500;
                     color: rgba(255,255,255,0.2);
-                    letter-spacing: 0.08em;
-                    text-transform: uppercase;
                     margin-bottom: 8px;
-                    font-family: 'DM Mono', monospace;
+                    font-family: 'DM Sans', sans-serif;
                 }
 
                 .suggestion-btn {
@@ -364,7 +363,9 @@ export default function Chatbot() {
                         {/* Header */}
                         <div className="chatbot-header">
                             <div className="chatbot-header-left">
-                                <div className="chatbot-avatar">J</div>
+                                <div className="chatbot-avatar">
+                                    <RiRobot2Line size={18} color="rgba(255,255,255,0.8)" />
+                                </div>
                                 <div className="chatbot-header-text">
                                     <span className="chatbot-header-name">Jeff's Assistant</span>
                                     <span className="chatbot-header-status">
@@ -380,7 +381,7 @@ export default function Chatbot() {
                         <div className="chatbot-body">
                             {history.length === 0 && (
                                 <div>
-                                    <div className="suggestions-label">You might ask</div>
+                                    <div className="suggestions-label">YOU MIGHT ASK</div>
                                     {suggestions.map((s, i) => (
                                         <button key={i} className="suggestion-btn" onClick={() => handleSend(s)}>
                                             {s}
