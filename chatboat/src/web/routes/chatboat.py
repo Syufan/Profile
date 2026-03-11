@@ -1,8 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
 
 from src.domain.application import Application
+
+MAX_MESSAGES_PER_IP = 10
+MAX_MESSAGE_LENGTH = 400
+MAX_HISTORY_LENGTH = 8
 
 class ChatRequest(BaseModel):
     message: str
@@ -11,6 +15,7 @@ class ChatRequest(BaseModel):
 class ChatBoatRoutes:
     def __init__(self, application: Application) -> None:
         self._application = application
+        self._ip_message_counts: dict[str, int] = {}
 
     def router(self) -> APIRouter:
         router=APIRouter()
@@ -22,9 +27,30 @@ class ChatBoatRoutes:
     def get_random_suggestions(self) -> dict:
         return {"suggestions": self._application.pick_random_suggestion()}
 
-    def send_message(self, request: ChatRequest) -> StreamingResponse:
-        stream = self._application.send_message(request.message, request.history)
+    def send_message(self, request: Request, body: ChatRequest) -> StreamingResponse:
+        client_ip = self._get_client_ip(request)
+        self._enforce_rate_limit(client_ip)
+        self._validate_message(body.message)
+        safe_history = self._trim_history(body.history)
+
+        stream = self._application.send_message(body.message, safe_history)
         return StreamingResponse(stream, media_type="text/plain")
 
     def check_health(self,) -> dict:
         return {"ok": True}
+
+    def _get_client_ip(self, request: Request) -> str:
+        return request.client.host if request.client else "unknown"
+
+    def _enforce_rate_limit(self, client_ip: str) -> None:
+        count = self._ip_message_counts.get(client_ip, 0)
+        if count >= MAX_MESSAGES_PER_IP:
+            raise HTTPException(status_code=429, detail="Message limit reached")
+        self._ip_message_counts[client_ip] = count + 1
+
+    def _validate_message(self, message: str) -> None:
+        if len(message.strip()) > MAX_MESSAGE_LENGTH:
+            raise HTTPException(status_code=400, detail="Message too long")
+
+    def _trim_history(self, history: list) -> list:
+        return history[-MAX_HISTORY_LENGTH:]
