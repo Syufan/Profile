@@ -25,6 +25,7 @@ class WebServer:
             allow_origins=self._allowed_origins,
             allow_methods=["*"],
             allow_headers=["*"],
+            expose_headers=["X-Remaining-Messages", "X-Max-Messages"],
         )
 
     def get_app(self) -> FastAPI:
