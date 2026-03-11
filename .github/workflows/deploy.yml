@@ -52,6 +52,10 @@ jobs:
           working-directory: ./chatboat
           run: ruff check .
 
+        - name: Run chatboat tests
+          working-directory: ./chatboat
+          run: pytest src/domain/test src/web/test
+
         - name: Run backend tests
           working-directory: ./backend
           run: ./mvnw test
@@ -66,10 +70,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
