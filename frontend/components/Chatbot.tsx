@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getSuggestions, sendMessage } from "@/services/api";
+import { getHealth, getSuggestions, sendMessage } from "@/services/api";
 import { FaCommentDots } from "react-icons/fa";
 import { RiRobot2Line } from "react-icons/ri";
 
@@ -14,33 +14,68 @@ export default function Chatbot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [backendStatus, setBackendStatus] = useState<
+        "checking" | "available" | "unavailable"
+        >("checking");
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && backendStatus === "available") {
       getSuggestions().then((data) => setSuggestions(data.suggestions));
     }
-  }, [isOpen]);
+  }, [isOpen, backendStatus]);
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const data = await getHealth();
+        setBackendStatus(data.ok ? "available" : "unavailable");
+      } catch {
+        setBackendStatus("unavailable");
+      }
+    };
+
+    checkHealth();
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
 
   const handleSend = async (message: string) => {
-    if (!message || isLoading) return;
-    setHistory((prev) => [...prev, { role: "user", content: message }]);
-    setInput("");
-    setIsLoading(true);
-    setHistory((prev) => [...prev, { role: "assistant", content: "" }]);
+    if (backendStatus !== "available") return;
 
-    await sendMessage(message, history, (chunk) => {
-      setHistory((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { role: "assistant", content: chunk };
-        return updated;
-      });
-    });
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage || isLoading) return;
 
-    setIsLoading(false);
+    const userMessage = { role: "user", content: trimmedMessage };
+    const assistantPlaceholder = { role: "assistant", content: "" };
+    const nextHistory = [...history, userMessage, assistantPlaceholder];
+
+    try{
+        setHistory(nextHistory);
+        setInput("");
+        setIsLoading(true);
+
+        await sendMessage(trimmedMessage, nextHistory, (chunk) => {
+        setHistory((prev) => {
+            const updated = [...prev];
+            updated[updated.length - 1] = { role: "assistant", content: chunk };
+            return updated;
+          });
+        });
+    } catch {
+        setHistory((prev) => {
+            const updated = [...prev];
+            updated[updated.length - 1] = {
+              role: "assistant",
+              content: "Something went wrong. Please try again later.",
+            };
+            return updated;
+        });
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   return (
@@ -140,8 +175,21 @@ export default function Chatbot() {
                     width: 6px;
                     height: 6px;
                     border-radius: 50%;
+                }
+
+                .status-dot.available {
                     background: #22c55e;
                     box-shadow: 0 0 6px #22c55e;
+                }
+
+                .status-dot.checking {
+                    background: #f59e0b;
+                    box-shadow: 0 0 6px #f59e0b;
+                }
+
+                .status-dot.unavailable {
+                    background: #ef4444;
+                    box-shadow: 0 0 6px #ef4444;
                 }
 
                 .chatbot-close {
@@ -372,8 +420,12 @@ export default function Chatbot() {
                 <div className="chatbot-header-text">
                   <span className="chatbot-header-name">Jeff's Assistant</span>
                   <span className="chatbot-header-status">
-                    <span className="status-dot" />
-                    Online
+                    <span className={`status-dot ${backendStatus}`} />
+                    {backendStatus === "available"
+                    ? "Online"
+                    : backendStatus === "checking"
+                    ? "Checking..."
+                    : "Unavailable"}
                   </span>
                 </div>
               </div>
@@ -395,6 +447,7 @@ export default function Chatbot() {
                       key={i}
                       className="suggestion-btn"
                       onClick={() => handleSend(s)}
+                      disabled={backendStatus !== "available"}
                     >
                       {s}
                     </button>
@@ -429,6 +482,7 @@ export default function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask me anything..."
+                disabled={backendStatus !== "available"}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSend(input);
                 }}
@@ -436,7 +490,7 @@ export default function Chatbot() {
               <button
                 className="chatbot-send"
                 onClick={() => handleSend(input)}
-                disabled={isLoading || !input}
+                disabled={isLoading || !input.trim() || backendStatus !== "available"}
               >
                 <svg
                   width="16"
