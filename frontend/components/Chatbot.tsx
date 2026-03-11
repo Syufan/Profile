@@ -380,6 +380,19 @@ export default function Chatbot() {
                     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                     overflow: hidden;
                 }
+                .chatbot-toggle:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.45;
+                    transform: none;
+                }
+                .chatbot-toggle:disabled:hover {
+                    transform: none;
+                    box-shadow:
+                        0 8px 32px rgba(0,0,0,0.7),
+                        0 2px 8px rgba(0,0,0,0.5),
+                        inset 0 1px 0 rgba(255,255,255,0.15),
+                        inset 0 -1px 0 rgba(0,0,0,0.4);
+                }
 
                 .chatbot-toggle::before {
                     content: '';
@@ -513,7 +526,13 @@ export default function Chatbot() {
                 className="chatbot-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything..."
+                placeholder={
+                    backendStatus === "available"
+                      ? "Ask me anything..."
+                      : backendStatus === "checking"
+                        ? "Connecting..."
+                        : "Assistant unavailable"
+                  }
                 disabled={backendStatus !== "available"}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSend(input);
@@ -544,7 +563,14 @@ export default function Chatbot() {
 
         {/* Toggle */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button className="chatbot-toggle" onClick={() => setIsOpen(!isOpen)}>
+            <button
+                className="chatbot-toggle"
+                disabled={backendStatus !== "available"}
+                onClick={() => {
+                    if (backendStatus !== "available") return;
+                    setIsOpen(!isOpen);
+                }}
+            >
             {isOpen ? (
               <svg
                 width="20"
@@ -562,7 +588,7 @@ export default function Chatbot() {
             ) : (
               <FaCommentDots size={20} />
             )}
-          </button>
+            </button>
         </div>
       </div>
     </>
