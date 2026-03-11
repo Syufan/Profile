@@ -19,6 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="bg-slate-900">
         {children}
         <Chatbot />
