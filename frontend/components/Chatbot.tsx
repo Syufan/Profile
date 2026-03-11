@@ -123,7 +123,7 @@ export default function Chatbot() {
                         <RiRobot2Line size={18} color="rgba(255,255,255,0.8)" />
                     </div>
                     <div className={styles.chatbotHeaderText}>
-                        <span className={styles.chatbotHeaderName}>Jeff's Assistant</span>
+                        <span className={styles.chatbotHeaderName}>Jeff</span>
                         <span className={styles.chatbotHeaderStatus}>
                             <span
                                 className={`${styles.statusDot} ${
