@@ -60,20 +60,27 @@ describe("api", () => {
     await expect(getSuggestions()).rejects.toThrow("Failed to fetch suggestions");
   });
 
-  it("sendMessage should return message", async () => {
-    const mockPost = require("axios").create().post as jest.Mock;
-    mockPost.mockResolvedValue({
-      data: { message: "Jeff Zhang knows Python." },
+  it("sendMessage should stream message chunks", async () => {
+    const mockReader = {
+        read: jest.fn()
+            .mockResolvedValueOnce({ done: false, value: new TextEncoder().encode("Jeff") })
+            .mockResolvedValueOnce({ done: false, value: new TextEncoder().encode(" Zhang") })
+            .mockResolvedValueOnce({ done: true, value: undefined })
+    };
+
+    global.fetch = jest.fn().mockResolvedValue({
+        body: { getReader: () => mockReader }
     });
 
-    const result = await sendMessage("What are your skills?");
+    const chunks: string[] = [];
+    await sendMessage("What are your skills?", [], (chunk) => chunks.push(chunk));
 
-    expect(result).toEqual({ message: "Jeff Zhang knows Python." });
+    expect(chunks).toEqual(["Jeff", "Jeff Zhang"]);
   });
 
   it("sendMessage should throw when request fails", async () => {
-    const mockPost = require("axios").create().post as jest.Mock;
-    mockPost.mockRejectedValue(new Error("Network error"));
-    await expect(sendMessage("hello")).rejects.toThrow("Failed to send message");
+    global.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
+
+    await expect(sendMessage("hello", [], () => {})).rejects.toThrow();
   });
 });
