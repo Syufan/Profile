@@ -15,16 +15,16 @@ jobs:
 
     steps:
         - name: Checkout code
-          uses: actions/checkout@v3
+          uses: actions/checkout@v5
 
         - name: Set up JDK
-          uses: actions/setup-java@v3
+          uses: actions/setup-java@v5
           with:
             java-version: '21'
             distribution: 'temurin'
 
         - name: Set up Node.js
-          uses: actions/setup-node@v3
+          uses: actions/setup-node@v5
           with:
             node-version: '18'
 
@@ -37,6 +37,20 @@ jobs:
           run: |
             npm ci
             npx prettier --check .
+
+        - name: Set up Python
+          uses: actions/setup-python@v6
+          with:
+            python-version: '3.11'
+
+        - name: Install Python dependencies
+          working-directory: ./chatboat
+          run: |
+            python -m pip install -r requirements.txt
+
+        - name: Ruff lint
+          working-directory: ./chatboat
+          run: ruff check .
 
         - name: Run backend tests
           working-directory: ./backend

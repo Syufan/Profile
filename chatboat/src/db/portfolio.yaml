@@ -1,0 +1,127 @@
+name: Jeff Zhang
+chinese_name: Yufan Zhang
+
+title: Full Stack AI Engineer
+tagline: "I build RAG pipelines, AI agents, and the backend systems that make them production-ready."
+
+summary: >
+  Full stack engineer focused on backend systems and AI-driven automation.
+  Open to full stack and AI engineering roles where I can build and ship production-ready AI systems.
+
+personal_opinions:
+  main_language: >
+    Python is my primary language — it's what I used throughout my AI studies
+    and my internship at Flowing Bee. That said, I've also worked with Java
+    and .NET, and I'm comfortable picking up whatever stack a team uses.
+
+  most_interesting_project: >
+    My two AI projects — the fact checking system and the image similarity matcher.
+    What made them interesting wasn't the results, it was the process: reading papers,
+    testing different architectures, and figuring out what actually works. For the image
+    project I landed on triplet training after going through the literature. For NLP,
+    I settled on a retrieve-then-classify pipeline. Both ranked top 10. That kind of
+    problem-solving from first principles is what I enjoy most.
+
+  team_preference: >
+    At Flowing Bee I worked in a 6-person Agile team where the seniors were genuinely
+    invested in mentoring — they'd walk you through things you didn't know rather than
+    just assign tasks. In client meetings everyone contributed from their own angle, then
+    we'd synthesize that into the actual build. That kind of collaborative dynamic, where
+    knowledge flows both ways and everyone has context on the full picture, is what I
+    work best in.
+
+  ideal_opportunity: >
+    I want to be in an environment where engineers are expected to understand the 'why'
+    behind what they build, not just the 'how'. At Flowing Bee I got a taste of that —
+    sitting in client meetings, understanding the business problem before writing a single
+    line of code. I want more of that. A role where I can grow into someone who bridges
+    the technical and business sides, not just execute tickets.
+
+  open_to_opportunities: >
+    Yes, actively looking. Available to start immediately.
+
+education:
+  - institution: University of Melbourne
+    degree: Master of Information Technology (Artificial Intelligence)
+    period: Jul 2023 - Dec 2025
+    status: Graduated
+  - institution: University of Melbourne
+    degree: Bachelor of Science (Computing and Software Systems)
+    period: Feb 2021 - Jun 2023
+    status: Graduated
+
+experience:
+  - company: Flowing Bee
+    role: Full Stack AI Engineer Intern
+    period: Nov 2024 - Feb 2025
+    team: 6-person cross-functional Agile team (hybrid remote/on-site)
+    highlights:
+      - Built multi-agent AI automation system using Azure OpenAI, reducing processing time from 30 days to 24 hours
+      - Implemented OIDC authentication and role-based authorization in FastAPI
+      - Applied TDD achieving 90%+ test coverage for security modules
+      - Developed admin panel with full CRUD for user and organisation management
+    tech_stack: [FastAPI, React, Azure OpenAI, AutoGen, pytest]
+
+projects:
+  - name: Personal Portfolio
+    year: 2026
+    description: >
+      Full-stack portfolio site built with Next.js and Spring Boot, deployed to AWS EC2.
+      Implemented dev/prod environment separation, startup-time data caching, global exception handling.
+    tech_stack: [Next.js, Spring Boot, TypeScript, AWS EC2, Tailwind CSS]
+    github: https://github.com/Syufan/Profile
+
+  - name: Glucope - Diabetic Patient Management
+    year: 2024
+    description: >
+      Web-based patient management application supporting daily workflows for patients and clinicians.
+      Deployed to Azure and AWS with CI/CD via GitHub Actions.
+    tech_stack: [Node.js, Express, JavaScript, MongoDB, Azure, AWS, GitHub Actions]
+    github: https://github.com/Syufan/Dev-Portfolio/tree/main/FullStack_Projects/WebLife-Diabetes
+
+  - name: Microservices Shopping Backend
+    year: 2024
+    description: >
+      E-commerce backend with four .NET Core microservices (Catalog, Basket, Discount, Ordering),
+      connected via RabbitMQ event-driven architecture with Redis caching.
+    tech_stack: [.NET Core, PostgreSQL, Redis, RabbitMQ, Docker]
+    github: https://github.com/Syufan/Dev-Portfolio/tree/main/FullStack_Projects/MyMicroservice
+
+  - name: AI Fact Checking System
+    year: 2024
+    description: >
+      RAG-based NLP pipeline for climate claim verification. Trained custom Transformer with Word2Vec embeddings
+      achieving 95% training accuracy. Ranked top 10 in Kaggle.
+    tech_stack: [Python, PyTorch, TF-IDF, Word2Vec, scikit-learn]
+    github: https://github.com/Syufan/Dev-Portfolio/tree/main/ML_Projects/Claim%20Verification
+
+  - name: Deep Image Similarity Matching System
+    year: 2024
+    description: >
+      Triplet network using fine-tuned ResNet152 for visual similarity retrieval.
+      Evaluated with AUC, MAP@K, t-SNE. Ranked top 10 on Kaggle leaderboard.
+    tech_stack: [Python, TensorFlow, Keras, ResNet152, OpenCV]
+    github: https://github.com/Syufan/Dev-Portfolio/tree/main/ML_Projects/Deep%20Image%20Similarity%20Matching%20System
+
+skills:
+  languages: [Python, Java, TypeScript, JavaScript, C#]
+  frameworks: [FastAPI, Spring Boot, Next.js, React, Node.js, Express, .NET Core]
+  ai_ml: [Azure OpenAI, AutoGen, PyTorch, TensorFlow, scikit-learn, RAG]
+  infrastructure: [AWS EC2, Azure, Docker, RabbitMQ, Redis, PostgreSQL, MongoDB]
+  tools: [Git, GitHub Actions, pytest, TDD]
+
+hobbies:
+  - Scuba Diving
+  - Photography
+  - Musical Theatre
+
+career_interests:
+  roles: [Full Stack Engineer, AI Engineer, Backend Engineer]
+  focus: Production-ready AI systems, RAG pipelines, AI agents, backend architecture
+
+contact:
+  email: yufan.zhang.tec@gmail.com
+  phone: "+61 434424080"
+  linkedin: https://www.linkedin.com/in/yufan-zhang-93ba64282
+  github: https://github.com/Syufan/Dev-Portfolio/tree/main
+  instagram: https://www.instagram.com/jeffery_yu_fan/

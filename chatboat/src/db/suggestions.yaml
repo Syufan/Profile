@@ -1,0 +1,32 @@
+suggestions:
+  # Tech stack
+  - "What technologies do you work with?"
+  - "What is your main programming language?"
+  - "What frameworks and tools do you use?"
+
+  # Projects
+  - "Tell me about your projects."
+  - "What is your most interesting project?"
+  - "Have you built anything with AI?"
+
+  # Work experience
+  - "What is your work experience?"
+  - "What kind of teams have you worked in?"
+
+  # Education
+  - "What is your educational background?"
+  - "What did you study?"
+
+  # Hobbies
+  - "What do you do outside of work?"
+  - "What are your hobbies?"
+
+  # Career interests
+  - "What kind of roles are you looking for?"
+  - "What is your ideal next opportunity?"
+  - "Are you open to new opportunities?"
+
+    # Contact
+  - "How can I contact you?"
+  - "What is your email address?"
+  - "Where can I find you online?"
