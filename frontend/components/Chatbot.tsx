@@ -24,12 +24,22 @@ export default function Chatbot() {
   );
   const [maxMessages, setMaxMessages] = useState<number | null>(null);
   const shouldShowRemainingMessages = remainingMessages !== null;
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (isOpen && backendStatus === "available") {
       getSuggestions().then((data) => setSuggestions(data.suggestions));
     }
   }, [isOpen, backendStatus]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 480);
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -119,7 +129,6 @@ export default function Chatbot() {
   return (
     <div
       className={styles.chatbotRoot}
-      style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 50 }}
     >
       {isOpen && (
         <div className={styles.chatbotWindow} style={{ marginBottom: "12px" }}>
@@ -283,35 +292,37 @@ export default function Chatbot() {
         </div>
       )}
 
-      {/* Toggle */}
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <button
-          className={styles.chatbotToggle}
-          disabled={backendStatus !== "available"}
-          onClick={() => {
-            if (backendStatus !== "available") return;
-            setIsOpen(!isOpen);
-          }}
-        >
-          {isOpen ? (
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <FaCommentDots size={20} />
-          )}
-        </button>
-      </div>
+        {/* Toggle */}
+        {!(isMobile && isOpen) && (
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <button
+                className={styles.chatbotToggle}
+                disabled={backendStatus !== "available"}
+                onClick={() => {
+                    if (backendStatus !== "available") return;
+                    setIsOpen(!isOpen);
+                }}
+                >
+                {isOpen ? (
+                    <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                ) : (
+                    <FaCommentDots size={20} />
+                )}
+                </button>
+            </div>
+        )}
     </div>
   );
 }
