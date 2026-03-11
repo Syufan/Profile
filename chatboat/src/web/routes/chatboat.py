@@ -16,6 +16,7 @@ class ChatBoatRoutes:
         router=APIRouter()
         router.get("/chat")(self.get_random_suggestions)
         router.post("/chat")(self.send_message)
+        router.get("/health")(self.check_health)
         return router
 
     def get_random_suggestions(self) -> dict:
@@ -24,3 +25,6 @@ class ChatBoatRoutes:
     def send_message(self, request: ChatRequest) -> StreamingResponse:
         stream = self._application.send_message(request.message, request.history)
         return StreamingResponse(stream, media_type="text/plain")
+
+    def check_health(self,) -> dict:
+        return {"ok": True}
