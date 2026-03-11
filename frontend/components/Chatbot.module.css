@@ -337,3 +337,10 @@
         inset 0 -1px 0 rgba(0,0,0,0.4);
 }
 .chatbotToggle:active { transform: scale(0.96); }
+.chatbotMeta {
+    padding: 0 20px 8px 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.38);
+    line-height: 1;
+    text-align: center;
+  }
