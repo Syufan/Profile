@@ -58,7 +58,6 @@ def test_send_message_rejects_when_rate_limit_reached(monkeypatch):
     mock_request = MagicMock()
     mock_request.client.host = "127.0.0.1"
     body = ChatRequest(message="hello", history=[])
-    monkeypatch.setattr(chatboat, "MESSAGE_COOLDOWN_SECONDS", 0)
 
     for _ in range(chatboat.MAX_MESSAGES_PER_IP):
         routes.send_message(mock_request, body)
