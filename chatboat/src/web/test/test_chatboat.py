@@ -14,8 +14,11 @@ def test_send_message():
     mock_app.send_message.return_value = iter(["Hello", " World"])
     routes = ChatBoatRoutes(mock_app)
 
-    request = ChatRequest(message="hello", history=[])
-    result = routes.send_message(request)
+    mock_request = MagicMock()
+    mock_request.client.host = "127.0.0.1"
+    body = ChatRequest(message="hello", history=[])
+
+    result = routes.send_message(mock_request, body)
 
     mock_app.send_message.assert_called_once_with("hello", [])
     assert result.status_code == 200
