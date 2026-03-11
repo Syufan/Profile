@@ -11,11 +11,12 @@ def test_successfully_get_3_suggestions():
 
 def test_send_message():
     mock_app = MagicMock()
-    mock_app.send_message.return_value = "Hello"
+    mock_app.send_message.return_value = iter(["Hello", " World"])
     routes = ChatBoatRoutes(mock_app)
 
     request = ChatRequest(message="hello", history=[])
     result = routes.send_message(request)
 
     mock_app.send_message.assert_called_once_with("hello", [])
-    assert result.body != b""
+    assert result.status_code == 200
+    assert result.media_type == "text/plain"
