@@ -14,7 +14,6 @@ export default function Chatbot() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [error, setError] = useState<string | null>(null);
   const [backendStatus, setBackendStatus] = useState<
         "checking" | "available" | "unavailable"
         >("checking");
@@ -41,6 +40,25 @@ export default function Chatbot() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const data = await getHealth();
+        setBackendStatus(data.ok ? "available" : "unavailable");
+      } catch {
+        setBackendStatus("unavailable");
+      }
+    };
+
+    checkHealth();
+
+    const intervalId = setInterval(() => {
+      checkHealth();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleSend = async (message: string) => {
     if (backendStatus !== "available") return;
@@ -393,7 +411,9 @@ export default function Chatbot() {
                         inset 0 1px 0 rgba(255,255,255,0.15),
                         inset 0 -1px 0 rgba(0,0,0,0.4);
                 }
-
+                .chatbot-toggle:disabled:active {
+                    transform: none;
+                }
                 .chatbot-toggle::before {
                     content: '';
                     position: absolute;
@@ -405,7 +425,6 @@ export default function Chatbot() {
                     border-radius: 50%;
                     pointer-events: none;
                 }
-
                 .chatbot-toggle:hover {
                     transform: scale(1.07);
                     box-shadow:
@@ -414,7 +433,6 @@ export default function Chatbot() {
                         inset 0 1px 0 rgba(255,255,255,0.2),
                         inset 0 -1px 0 rgba(0,0,0,0.4);
                 }
-
                 .chatbot-toggle:active { transform: scale(0.96); }
             `}</style>
 
