@@ -29,3 +29,9 @@ class Application:
 
     def pick_random_suggestion(self) -> list[str]:
         return random.sample(self._suggestions, SUGGESTIONS_LIMIT)
+
+    def send_message(self, message:str) -> str:
+        if not message:
+            raise ValueError("Message cannot be empty")
+        data = self._data
+        return self._agent.send_message(message,data)
