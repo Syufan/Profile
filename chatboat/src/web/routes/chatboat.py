@@ -1,5 +1,3 @@
-import time
-
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
@@ -9,7 +7,6 @@ from src.domain.application import Application
 MAX_MESSAGES_PER_IP = 10
 MAX_MESSAGE_LENGTH = 400
 MAX_HISTORY_LENGTH = 8
-MESSAGE_COOLDOWN_SECONDS = 0
 
 class ChatRequest(BaseModel):
     message: str
@@ -33,7 +30,6 @@ class ChatBoatRoutes:
 
     def send_message(self, request: Request, body: ChatRequest) -> StreamingResponse:
         client_ip = self._get_client_ip(request)
-        self._enforce_cooldown(client_ip)
         self._enforce_rate_limit(client_ip)
         self._validate_message(body.message)
         safe_history = self._trim_history(body.history)
@@ -70,18 +66,6 @@ class ChatBoatRoutes:
 
     def _trim_history(self, history: list) -> list:
         return history[-MAX_HISTORY_LENGTH:]
-
-    def _enforce_cooldown(self, client_ip: str) -> None:
-        now = time.time()
-        last_sent = self._ip_last_sent_at.get(client_ip, 0)
-
-        if now - last_sent < MESSAGE_COOLDOWN_SECONDS:
-            raise HTTPException(
-                status_code=429,
-                detail="Please wait before sending another message",
-            )
-
-        self._ip_last_sent_at[client_ip] = now
 
     def _get_remaining_messages(self, client_ip: str) -> int:
         count = self._ip_message_counts.get(client_ip, 0)
