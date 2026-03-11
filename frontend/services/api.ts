@@ -65,6 +65,34 @@ export async function sendMessage(
     },
   );
 
+  if (!response.ok) {
+    let errorData: any = null;
+    try {
+      errorData = await response.json();
+    } catch {
+
+    }
+    throw {
+      status: response.status,
+      detail:
+        errorData?.detail?.message ??
+        errorData?.detail ??
+        "Something went wrong. Please try again later.",
+      remainingMessages: errorData?.detail?.remaining_messages ?? null,
+      maxMessages: errorData?.detail?.max_messages ?? null,
+    };
+  }
+
+  const remainingMessages = response.headers.get("X-Remaining-Messages");
+  const maxMessages = response.headers.get("X-Max-Messages");
+
+  if (!response.body) {
+    throw {
+      status: 500,
+      detail: "Empty response body",
+    };
+  }
+
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
   let result = "";
@@ -77,5 +105,9 @@ export async function sendMessage(
     onChunk(result);
   }
 
-  return result;
+  return {
+    result,
+    remainingMessages: remainingMessages ? Number(remainingMessages) : null,
+    maxMessages: maxMessages ? Number(maxMessages) : null,
+  };
 }
