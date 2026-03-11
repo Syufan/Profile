@@ -9,7 +9,7 @@ from src.domain.application import Application
 MAX_MESSAGES_PER_IP = 10
 MAX_MESSAGE_LENGTH = 400
 MAX_HISTORY_LENGTH = 8
-MESSAGE_COOLDOWN_SECONDS = 3
+MESSAGE_COOLDOWN_SECONDS = 0
 
 class ChatRequest(BaseModel):
     message: str
@@ -39,7 +39,11 @@ class ChatBoatRoutes:
         safe_history = self._trim_history(body.history)
 
         stream = self._application.send_message(body.message, safe_history)
-        return StreamingResponse(stream, media_type="text/plain")
+        remaining_messages = self._get_remaining_messages(client_ip)
+        response = StreamingResponse(stream, media_type="text/plain")
+        response.headers["X-Remaining-Messages"] = str(remaining_messages)
+        response.headers["X-Max-Messages"] = str(MAX_MESSAGES_PER_IP)
+        return response
 
     def check_health(self,) -> dict:
         return {"ok": True}
@@ -50,7 +54,14 @@ class ChatBoatRoutes:
     def _enforce_rate_limit(self, client_ip: str) -> None:
         count = self._ip_message_counts.get(client_ip, 0)
         if count >= MAX_MESSAGES_PER_IP:
-            raise HTTPException(status_code=429, detail="Message limit reached")
+            raise HTTPException(
+                status_code=429,
+                detail={
+                    "message": "Message limit reached",
+                    "remaining_messages": 0,
+                    "max_messages": MAX_MESSAGES_PER_IP,
+                },
+            )
         self._ip_message_counts[client_ip] = count + 1
 
     def _validate_message(self, message: str) -> None:
@@ -71,3 +82,7 @@ class ChatBoatRoutes:
             )
 
         self._ip_last_sent_at[client_ip] = now
+
+    def _get_remaining_messages(self, client_ip: str) -> int:
+        count = self._ip_message_counts.get(client_ip, 0)
+        return max(0, MAX_MESSAGES_PER_IP - count)
