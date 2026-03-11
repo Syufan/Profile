@@ -67,7 +67,9 @@ def test_send_message_rejects_when_rate_limit_reached(monkeypatch):
         routes.send_message(mock_request, body)
 
     assert exc.value.status_code == 429
-    assert exc.value.detail == "Message limit reached"
+    assert exc.value.detail["message"] == "Message limit reached"
+    assert exc.value.detail["remaining_messages"] == 0
+    assert exc.value.detail["max_messages"] == chatboat.MAX_MESSAGES_PER_IP
 
 def test_send_message_trims_history():
     mock_app = MagicMock()
