@@ -84,15 +84,28 @@ describe("api", () => {
     };
 
     global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      headers: {
+        get: jest.fn((name: string) => {
+          if (name === "X-Remaining-Messages") return "9";
+          if (name === "X-Max-Messages") return "10";
+          return null;
+        }),
+      },
       body: { getReader: () => mockReader },
     });
 
     const chunks: string[] = [];
-    await sendMessage("What are your skills?", [], (chunk) =>
+    const result = await sendMessage("What are your skills?", [], (chunk) =>
       chunks.push(chunk),
     );
 
     expect(chunks).toEqual(["Jeff", "Jeff Zhang"]);
+    expect(result).toEqual({
+      result: "Jeff Zhang",
+      remainingMessages: 9,
+      maxMessages: 10,
+    });
   });
 
   it("sendMessage should throw when request fails", async () => {
