@@ -439,39 +439,71 @@ export default function Chatbot() {
 
             {/* Body */}
             <div className="chatbot-body">
-              {history.length === 0 && (
-                <div>
-                  <div className="suggestions-label">YOU MIGHT ASK</div>
-                  {suggestions.map((s, i) => (
-                    <button
-                      key={i}
-                      className="suggestion-btn"
-                      onClick={() => handleSend(s)}
-                      disabled={backendStatus !== "available"}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
+                {backendStatus === "checking" && history.length === 0 && (
+                    <div className="msg-row assistant">
+                    <div className="msg-bubble assistant">
+                        Connecting to assistant...
+                    </div>
+                    </div>
+                )}
 
-              {history.map((msg, i) => (
-                <div key={i} className={`msg-row ${msg.role}`}>
-                  <div
-                    className={`msg-bubble ${msg.role} ${msg.content === "" ? "empty" : ""}`}
-                  >
-                    {msg.content === "" && msg.role === "assistant" ? (
-                      <div className="typing-indicator">
-                        <div className="typing-dot" />
-                        <div className="typing-dot" />
-                        <div className="typing-dot" />
-                      </div>
-                    ) : (
-                      msg.content
-                    )}
-                  </div>
-                </div>
-              ))}
+                {backendStatus === "unavailable" && history.length === 0 && (
+                    <div className="msg-row assistant">
+                    <div className="msg-bubble assistant">
+                        Sorry, the assistant is currently unavailable. Please try again later.
+                    </div>
+                    </div>
+                )}
+
+                {backendStatus === "available" && history.length === 0 && (
+                    <div>
+                    <div className="suggestions-label">YOU MIGHT ASK</div>
+                    {suggestions.map((s, i) => (
+                        <button
+                        key={i}
+                        className="suggestion-btn"
+                        onClick={() => handleSend(s)}
+                        disabled={backendStatus !== "available"}
+                        >
+                        {s}
+                        </button>
+                    ))}
+                    </div>
+                )}
+
+                {history.length === 0 && (
+                    <div>
+                        <div className="suggestions-label">YOU MIGHT ASK</div>
+                        {suggestions.map((s, i) => (
+                            <button
+                            key={i}
+                            className="suggestion-btn"
+                            onClick={() => handleSend(s)}
+                            disabled={backendStatus !== "available"}
+                            >
+                            {s}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {history.map((msg, i) => (
+                    <div key={i} className={`msg-row ${msg.role}`}>
+                        <div
+                            className={`msg-bubble ${msg.role} ${msg.content === "" ? "empty" : ""}`}
+                        >
+                            {msg.content === "" && msg.role === "assistant" ? (
+                            <div className="typing-indicator">
+                                <div className="typing-dot" />
+                                <div className="typing-dot" />
+                                <div className="typing-dot" />
+                            </div>
+                            ) : (
+                            msg.content
+                            )}
+                        </div>
+                    </div>
+                ))}
               <div ref={bottomRef} />
             </div>
 
