@@ -6,6 +6,11 @@ const api = axios.create({
   timeout: 5000,
 });
 
+const chatbotApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_CHATBOT_API_URL,
+  timeout: 5000,
+});
+
 export async function getProfile() {
   try {
     const response = await api.get("/api/");
@@ -24,4 +29,14 @@ export async function getProjects() {
     console.error("Failed to fetch projects:", error);
     throw new Error("Failed to fetch projects");
   }
+}
+
+export async function getSuggestions() {
+  const response = await chatbotApi.get("/chat");
+  return response.data;
+}
+
+export async function sendMessage(message: string) {
+  const response = await chatbotApi.post("/chat", { message });
+  return response.data;
 }
