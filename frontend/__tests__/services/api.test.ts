@@ -1,4 +1,9 @@
-import { getProfile, getProjects, getSuggestions, sendMessage } from "@/services/api";
+import {
+  getProfile,
+  getProjects,
+  getSuggestions,
+  sendMessage,
+} from "@/services/api";
 
 jest.mock("axios", () => {
   const mockGet = jest.fn();
@@ -57,23 +62,34 @@ describe("api", () => {
 
   it("getSuggestions should throw when request fails", async () => {
     getMockGet().mockRejectedValue(new Error("Network error"));
-    await expect(getSuggestions()).rejects.toThrow("Failed to fetch suggestions");
+    await expect(getSuggestions()).rejects.toThrow(
+      "Failed to fetch suggestions",
+    );
   });
 
   it("sendMessage should stream message chunks", async () => {
     const mockReader = {
-        read: jest.fn()
-            .mockResolvedValueOnce({ done: false, value: new TextEncoder().encode("Jeff") })
-            .mockResolvedValueOnce({ done: false, value: new TextEncoder().encode(" Zhang") })
-            .mockResolvedValueOnce({ done: true, value: undefined })
+      read: jest
+        .fn()
+        .mockResolvedValueOnce({
+          done: false,
+          value: new TextEncoder().encode("Jeff"),
+        })
+        .mockResolvedValueOnce({
+          done: false,
+          value: new TextEncoder().encode(" Zhang"),
+        })
+        .mockResolvedValueOnce({ done: true, value: undefined }),
     };
 
     global.fetch = jest.fn().mockResolvedValue({
-        body: { getReader: () => mockReader }
+      body: { getReader: () => mockReader },
     });
 
     const chunks: string[] = [];
-    await sendMessage("What are your skills?", [], (chunk) => chunks.push(chunk));
+    await sendMessage("What are your skills?", [], (chunk) =>
+      chunks.push(chunk),
+    );
 
     expect(chunks).toEqual(["Jeff", "Jeff Zhang"]);
   });

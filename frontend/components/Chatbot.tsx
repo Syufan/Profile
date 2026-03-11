@@ -8,44 +8,44 @@ import { RiRobot2Line } from "react-icons/ri";
 type Message = { role: string; content: string };
 
 export default function Chatbot() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
-    const [history, setHistory] = useState<Message[]>([]);
-    const [input, setInput] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const bottomRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [history, setHistory] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (isOpen) {
-            getSuggestions().then(data => setSuggestions(data.suggestions));
-        }
-    }, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+      getSuggestions().then((data) => setSuggestions(data.suggestions));
+    }
+  }, [isOpen]);
 
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [history]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
 
-    const handleSend = async (message: string) => {
-        if (!message || isLoading) return;
-        setHistory(prev => [...prev, { role: "user", content: message }]);
-        setInput("");
-        setIsLoading(true);
-        setHistory(prev => [...prev, { role: "assistant", content: "" }]);
+  const handleSend = async (message: string) => {
+    if (!message || isLoading) return;
+    setHistory((prev) => [...prev, { role: "user", content: message }]);
+    setInput("");
+    setIsLoading(true);
+    setHistory((prev) => [...prev, { role: "assistant", content: "" }]);
 
-        await sendMessage(message, history, (chunk) => {
-            setHistory(prev => {
-                const updated = [...prev];
-                updated[updated.length - 1] = { role: "assistant", content: chunk };
-                return updated;
-            });
-        });
+    await sendMessage(message, history, (chunk) => {
+      setHistory((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { role: "assistant", content: chunk };
+        return updated;
+      });
+    });
 
-        setIsLoading(false);
-    };
+    setIsLoading(false);
+  };
 
-    return (
-        <>
-            <style>{`
+  return (
+    <>
+      <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
 
                 .chatbot-root * {
@@ -357,91 +357,128 @@ export default function Chatbot() {
                 .chatbot-toggle:active { transform: scale(0.96); }
             `}</style>
 
-            <div className="chatbot-root" style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 50 }}>
-                {isOpen && (
-                    <div className="chatbot-window" style={{ marginBottom: "12px" }}>
-                        {/* Header */}
-                        <div className="chatbot-header">
-                            <div className="chatbot-header-left">
-                                <div className="chatbot-avatar">
-                                    <RiRobot2Line size={18} color="rgba(255,255,255,0.8)" />
-                                </div>
-                                <div className="chatbot-header-text">
-                                    <span className="chatbot-header-name">Jeff's Assistant</span>
-                                    <span className="chatbot-header-status">
-                                        <span className="status-dot" />
-                                        Online
-                                    </span>
-                                </div>
-                            </div>
-                            <button className="chatbot-close" onClick={() => setIsOpen(false)}>✕</button>
-                        </div>
-
-                        {/* Body */}
-                        <div className="chatbot-body">
-                            {history.length === 0 && (
-                                <div>
-                                    <div className="suggestions-label">YOU MIGHT ASK</div>
-                                    {suggestions.map((s, i) => (
-                                        <button key={i} className="suggestion-btn" onClick={() => handleSend(s)}>
-                                            {s}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            {history.map((msg, i) => (
-                                <div key={i} className={`msg-row ${msg.role}`}>
-                                    <div className={`msg-bubble ${msg.role} ${msg.content === "" ? "empty" : ""}`}>
-                                        {msg.content === "" && msg.role === "assistant" ? (
-                                            <div className="typing-indicator">
-                                                <div className="typing-dot" />
-                                                <div className="typing-dot" />
-                                                <div className="typing-dot" />
-                                            </div>
-                                        ) : msg.content}
-                                    </div>
-                                </div>
-                            ))}
-                            <div ref={bottomRef} />
-                        </div>
-
-                        {/* Footer */}
-                        <div className="chatbot-footer">
-                            <input
-                                className="chatbot-input"
-                                value={input}
-                                onChange={e => setInput(e.target.value)}
-                                placeholder="Ask me anything..."
-                                onKeyDown={e => { if (e.key === "Enter") handleSend(input); }}
-                            />
-                            <button
-                                className="chatbot-send"
-                                onClick={() => handleSend(input)}
-                                disabled={isLoading || !input}
-                            >
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <line x1="22" y1="2" x2="11" y2="13" />
-                                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {/* Toggle */}
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button className="chatbot-toggle" onClick={() => setIsOpen(!isOpen)}>
-                        {isOpen ? (
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        ) : (
-                            <FaCommentDots size={20} />
-                        )}
-                    </button>
+      <div
+        className="chatbot-root"
+        style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 50 }}
+      >
+        {isOpen && (
+          <div className="chatbot-window" style={{ marginBottom: "12px" }}>
+            {/* Header */}
+            <div className="chatbot-header">
+              <div className="chatbot-header-left">
+                <div className="chatbot-avatar">
+                  <RiRobot2Line size={18} color="rgba(255,255,255,0.8)" />
                 </div>
+                <div className="chatbot-header-text">
+                  <span className="chatbot-header-name">Jeff's Assistant</span>
+                  <span className="chatbot-header-status">
+                    <span className="status-dot" />
+                    Online
+                  </span>
+                </div>
+              </div>
+              <button
+                className="chatbot-close"
+                onClick={() => setIsOpen(false)}
+              >
+                ✕
+              </button>
             </div>
-        </>
-    );
+
+            {/* Body */}
+            <div className="chatbot-body">
+              {history.length === 0 && (
+                <div>
+                  <div className="suggestions-label">YOU MIGHT ASK</div>
+                  {suggestions.map((s, i) => (
+                    <button
+                      key={i}
+                      className="suggestion-btn"
+                      onClick={() => handleSend(s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {history.map((msg, i) => (
+                <div key={i} className={`msg-row ${msg.role}`}>
+                  <div
+                    className={`msg-bubble ${msg.role} ${msg.content === "" ? "empty" : ""}`}
+                  >
+                    {msg.content === "" && msg.role === "assistant" ? (
+                      <div className="typing-indicator">
+                        <div className="typing-dot" />
+                        <div className="typing-dot" />
+                        <div className="typing-dot" />
+                      </div>
+                    ) : (
+                      msg.content
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div ref={bottomRef} />
+            </div>
+
+            {/* Footer */}
+            <div className="chatbot-footer">
+              <input
+                className="chatbot-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSend(input);
+                }}
+              />
+              <button
+                className="chatbot-send"
+                onClick={() => handleSend(input)}
+                disabled={isLoading || !input}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Toggle */}
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button className="chatbot-toggle" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <FaCommentDots size={20} />
+            )}
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }

@@ -25,6 +25,6 @@ repos:
     hooks:
       - id: prettier
         name: Prettier
-        entry: bash -c 'cd frontend && npx prettier --write'
+        entry: bash -c 'cd frontend && npx prettier --write && git add -u'
         language: system
         types: [javascript, jsx, ts, tsx, css]
