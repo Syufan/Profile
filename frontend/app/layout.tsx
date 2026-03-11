@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Chatbot from "@/components/Chatbot";
 
 export const metadata: Metadata = {
   title: "Jeff Zhang - Full Stack AI Engineer",
@@ -18,7 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-slate-900">{children}</body>
+      <body className="bg-slate-900">
+        {children}
+        <Chatbot />
+      </body>
     </html>
   );
 }
