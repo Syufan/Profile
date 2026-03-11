@@ -3,19 +3,19 @@
   font-family: "DM Sans", sans-serif;
 }
 .chatbotRoot {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 50;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
 }
 
 @media (max-width: 480px) {
-    .chatbotRoot {
-      bottom: 0;
-      right: 0;
-      left: 0;
-      width: 100vw;
-    }
+  .chatbotRoot {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100vw;
+  }
 }
 .chatbotWindow {
   width: 360px;
