@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
 
 from src.domain.application import Application
 
@@ -21,6 +21,6 @@ class ChatBoatRoutes:
     def get_random_suggestions(self) -> dict:
         return {"suggestions": self._application.pick_random_suggestion()}
 
-    def send_message(self, request: ChatRequest) -> JSONResponse:
-        reply = self._application.send_message(request.message, request.history)
-        return JSONResponse(content={"message": reply})
+    def send_message(self, request: ChatRequest) -> StreamingResponse:
+        stream = self._application.send_message(request.message, request.history)
+        return StreamingResponse(stream, media_type="text/plain")

@@ -1,3 +1,4 @@
+from typing import Generator
 import yaml
 import random
 from pathlib import Path
@@ -30,7 +31,7 @@ class Application:
     def pick_random_suggestion(self) -> list[str]:
         return random.sample(self._suggestions, SUGGESTIONS_LIMIT)
 
-    def send_message(self, message:str, history: list) -> str:
+    def send_message(self, message:str, history: list) -> Generator[str, None, None]:
         if not message:
             raise ValueError("Message cannot be empty")
         data = self._data
