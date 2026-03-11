@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-class Agent:
+class OpenAIClient:
     def __init__(self) -> None:
         self._client = OpenAI()
 

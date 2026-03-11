@@ -2,12 +2,12 @@ import yaml
 import random
 from pathlib import Path
 
-from src.domain.agent import Agent
+from src.domain.openai_client import OpenAIClient
 
 SUGGESTIONS_LIMIT = 3
 
 class Application:
-    def __init__(self, db_path: str, agent:Agent) -> None:
+    def __init__(self, db_path: str, agent:OpenAIClient) -> None:
         path = Path(db_path)
         self._suggestions = self._load_suggestions(path / "suggestions.yaml")
         self._data = self._load_data(path / "portfolio.yaml")
