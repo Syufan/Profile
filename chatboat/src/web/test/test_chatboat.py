@@ -1,4 +1,8 @@
+import pytest
+from fastapi import HTTPException
+
 from src.web.routes.chatboat import ChatBoatRoutes, ChatRequest
+import src.web.routes.chatboat as chatboat
 from unittest.mock import MagicMock
 
 def test_successfully_get_3_suggestions():
@@ -31,3 +35,52 @@ def test_health_returns_ok():
     result = routes.check_health()
 
     assert result == {"ok": True}
+
+def test_send_message_rejects_long_message():
+    mock_app = MagicMock()
+    routes = ChatBoatRoutes(mock_app)
+
+    mock_request = MagicMock()
+    mock_request.client.host = "127.0.0.1"
+    body = ChatRequest(message="a" * 401, history=[])
+
+    with pytest.raises(HTTPException) as exc:
+        routes.send_message(mock_request, body)
+
+    assert exc.value.status_code == 400
+    assert exc.value.detail == "Message too long"
+
+def test_send_message_rejects_when_rate_limit_reached(monkeypatch):
+    mock_app = MagicMock()
+    mock_app.send_message.return_value = iter(["Hello"])
+    routes = ChatBoatRoutes(mock_app)
+
+    mock_request = MagicMock()
+    mock_request.client.host = "127.0.0.1"
+    body = ChatRequest(message="hello", history=[])
+    monkeypatch.setattr(chatboat, "MESSAGE_COOLDOWN_SECONDS", 0)
+
+    for _ in range(chatboat.MAX_MESSAGES_PER_IP):
+        routes.send_message(mock_request, body)
+
+    with pytest.raises(HTTPException) as exc:
+        routes.send_message(mock_request, body)
+
+    assert exc.value.status_code == 429
+    assert exc.value.detail == "Message limit reached"
+
+def test_send_message_trims_history():
+    mock_app = MagicMock()
+    mock_app.send_message.return_value = iter(["Hello"])
+    routes = ChatBoatRoutes(mock_app)
+
+    mock_request = MagicMock()
+    mock_request.client.host = "127.0.0.1"
+    body = ChatRequest(
+        message="hello",
+        history=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    )
+
+    routes.send_message(mock_request, body)
+
+    mock_app.send_message.assert_called_once_with("hello", [3, 4, 5, 6, 7, 8, 9, 10])
