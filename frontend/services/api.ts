@@ -31,6 +31,16 @@ export async function getProjects() {
   }
 }
 
+export async function getHealth() {
+  try {
+    const response = await chatbotApi.get("/health");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch health status:", error);
+    throw new Error("Failed to fetch health status");
+  }
+}
+
 export async function getSuggestions() {
   try {
     const response = await chatbotApi.get("/chat");
