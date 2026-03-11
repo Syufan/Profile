@@ -14,10 +14,12 @@ def _build_webserver() -> WebServer:
     app = Application(db_path,agent=OpenAIClient())
     return WebServer(application=app,allowed_origins=allowed_origins)
 
-app= _build_webserver().get_app()
+app = _build_webserver().get_app()
+
+reload = os.getenv("ENV", "production") != "production"
 
 def main() -> None:
-    uvicorn.run("src.web.maindev:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("src.web.main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), reload=reload)
 
 if __name__ == "__main__":
     main()
