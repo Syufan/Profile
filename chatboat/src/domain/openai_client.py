@@ -1,6 +1,9 @@
 from typing import Generator
 from openai import OpenAI
 
+MODEL_TIMEOUT_SECONDS = 15
+MAX_OUTPUT_TOKENS = 500
+
 class OpenAIClient:
     def __init__(self) -> None:
         self._client = OpenAI()
@@ -8,7 +11,8 @@ class OpenAIClient:
     def send_message(self, message:str, data:str, history: list) -> Generator[str, None, None]:
         stream = self._client.chat.completions.create(
             model="gpt-4o-mini-2024-07-18",
-            max_tokens=500,
+            max_tokens=MAX_OUTPUT_TOKENS,
+            timeout=MODEL_TIMEOUT_SECONDS,
             stream=True,
             messages=[
                 {"role": "system", "content": f"""You are a portfolio assistant for a software engineer named Jeff Zhang.
