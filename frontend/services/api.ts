@@ -69,9 +69,7 @@ export async function sendMessage(
     let errorData: any = null;
     try {
       errorData = await response.json();
-    } catch {
-
-    }
+    } catch {}
     throw {
       status: response.status,
       detail:
