@@ -10,8 +10,9 @@ from src.domain.agent import Agent
 def _build_webserver() -> WebServer:
     load_dotenv()
     db_path = os.getenv("DB_PATH")
+    allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
     app = Application(db_path,agent=Agent())
-    return WebServer(application=app)
+    return WebServer(application=app,allowed_origins=allowed_origins)
 
 app= _build_webserver().get_app()
 
