@@ -2,14 +2,16 @@ import yaml
 import random
 from pathlib import Path
 
+from src.domain.agent import Agent
+
 SUGGESTIONS_LIMIT = 3
 
 class Application:
-    def __init__(self, db_path: str) -> None:
+    def __init__(self, db_path: str, agent:Agent) -> None:
         path = Path(db_path)
         self._suggestions = self._load_suggestions(path / "suggestions.yaml")
         self._data = self._load_data(path / "portfolio.yaml")
-
+        self._agent = agent
 
     def _load_suggestions(self, db_path:str) -> list[str]:
         with open(db_path) as f:

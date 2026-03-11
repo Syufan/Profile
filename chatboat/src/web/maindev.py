@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 
 from src.web.service import WebServer
 from src.domain.application import Application
+from src.domain.agent import Agent
 
 def _build_webserver() -> WebServer:
     load_dotenv()
     db_path = os.getenv("DB_PATH")
-    app = Application(db_path)
+    app = Application(db_path,agent=Agent())
     return WebServer(application=app)
 
 app= _build_webserver().get_app()
